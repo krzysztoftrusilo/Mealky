@@ -1,5 +1,6 @@
 package com.kuba.mealky.Presenters
 
+import android.arch.lifecycle.LiveData
 import android.os.AsyncTask
 import android.os.Handler
 import android.os.HandlerThread
@@ -9,20 +10,15 @@ import com.kuba.mealky.Database.DBWorkerThread
 import com.kuba.mealky.Database.Entities.MealData
 import com.kuba.mealky.Database.MealkyDatabase
 import android.os.Looper
+import com.kuba.mealky.Database.Repositories.MealsRepository
 
 
-
-class ListOfMealsPresenter(val mealkyDatabase: MealkyDatabase) : BasePresenter<ListOfMealsContract.View>(), ListOfMealsContract.Presenter {
+class ListOfMealsPresenter(val mealsRepository: MealsRepository) : BasePresenter<ListOfMealsContract.View>(), ListOfMealsContract.Presenter {
 
     override fun loadMeals() {
-        var meals: List<MealData> = emptyList()
-        val task = Runnable {
-            meals = mealkyDatabase?.mealDao()?.getAll()
-            Log.e("MealsSizeInTask", meals.size.toString())
-            view?.fillList(meals)
-        }
-        AsyncTask.execute(task)
-        Log.e("MealsSizeAfterTask", meals.size.toString())
+        var meals: LiveData<List<MealData>>
+        meals = mealsRepository.getAll()
+        view?.fillList(meals)
     }
 
     override fun changeViewToMeal() {

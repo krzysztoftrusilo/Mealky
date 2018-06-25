@@ -1,5 +1,6 @@
 package com.kuba.mealky.Database.DAO
 
+import android.arch.lifecycle.LiveData
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy.REPLACE
@@ -10,7 +11,7 @@ import com.kuba.mealky.Database.Entities.MealData
 interface MealDao {
 
     @Query("SELECT * from meal")
-    fun getAll(): List<MealData>
+    fun getAll(): LiveData<List<MealData>>
 
     @Insert(onConflict = REPLACE)
     fun insert(mealData: MealData)
